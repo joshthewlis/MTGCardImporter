@@ -1,0 +1,92 @@
+﻿<Window x:Class="MTGCardImporter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MTGCardImporter"
+        xmlns:ViewModels="clr-namespace:MTGCardImporter.ViewModels"
+        mc:Ignorable="d"
+        Title="MTG Card Importer"
+        MinHeight="800" MinWidth="1200"
+        Height="800" Width="1200"
+        Loaded="Window_Loaded">
+
+    <Window.DataContext>
+        <ViewModels:MainViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+        <Style TargetType="{x:Type GroupBox}">
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="MinHeight" Value="40" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="300" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid ItemsSource="{Binding Path=myCards}"
+                  SelectionMode="Single"
+                  SelectedItem="{Binding Path=selectedCard}"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Path=quantity}" />
+                <DataGridTextColumn Header="Card Number" Binding="{Binding Path=number, StringFormat={}{0:N3}}" />
+                <!--<DataGridComboBoxColumn Header="Foil" ItemsSource="{Binding Path=DataContext.foilTypes, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" SelectedValueBinding="{Binding Path=foil}" />-->
+                <DataGridTextColumn Header="Foil" Binding="{Binding Path=foil}" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Path=name}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Set" Binding="{Binding Path=set}" IsReadOnly="True" />
+                <DataGridTextColumn Header="CMC" Binding="{Binding Path=cmc}" IsReadOnly="True" />
+                <DataGridTextColumn Header="UUID" Binding="{Binding Path=uuid}" IsReadOnly="True" />
+                <DataGridTextColumn Header="ScryfallID" Binding="{Binding Path=scryfallId}" IsReadOnly="True" />
+                <!--<DataGridTemplateColumn Header="Picture">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Path=imageUrl}" MaxHeight="350" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Column="1">
+            <GroupBox Header="Selected Card">
+                <Image Source="{Binding Path=selectedCard.imageUrl}" />
+            </GroupBox>
+            
+            <GroupBox Header="Card Database">
+                <StackPanel>
+                    <ComboBox ItemsSource="{Binding Path=sets}" DisplayMemberPath="name" SelectedItem="{Binding Path=selectedSet}" />
+                    <Button Command="{Binding Path=LoadCardDatabase}">Load Card Database</Button>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Import / Export">
+                <StackPanel>
+                    <Button Command="{Binding Path=LoadCSV}">Load CSV</Button>
+                    <Button Command="{Binding Path=SaveCSV}">Save CSV</Button>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+
+    </Grid>
+</Window>
